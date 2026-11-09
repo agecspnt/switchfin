@@ -78,6 +78,7 @@ public:
         MPV_VO,
         MPV_RENDER,
         PLAYER_BOTTOM_BAR,
+        PLAYER_SHOW_BATTERY,
         PLAYER_LOW_QUALITY,
         PLAYER_INMEMORY_CACHE,
         PLAYER_SPEED,

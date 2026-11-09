@@ -201,6 +201,7 @@
     },
     "playback": {
       "header": "Reproducción",
+      "show_battery": "Mostrar nivel de batería",
       "bottom_bar": "Mostrar barra de progreso inferior",
       "low_quality": "Decodificación de baja calidad (menor uso de CPU)",
       "in_memory_cache": "Caché en memoria",

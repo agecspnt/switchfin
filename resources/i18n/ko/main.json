@@ -201,6 +201,7 @@
     },
     "playback": {
       "header": "재생 설정",
+      "show_battery": "배터리 잔량 표시",
       "bottom_bar": "하단 진행 표시줄 표시",
       "low_quality": "저화질 디코딩 (화질을 희생하여 전력 소모를 줄입니다)",
       "in_memory_cache": "디코딩 캐시",

@@ -1,3 +1,7 @@
+#if defined(_WIN32) && !defined(NOMINMAX)
+#define NOMINMAX
+#endif
+
 #include "view/video_view.hpp"
 #include "utils/config.hpp"
 #include "utils/dialog.hpp"
@@ -10,6 +14,10 @@
 #include "view/svg_image.hpp"
 #include "view/video_profile.hpp"
 #include "view/video_progress_slider.hpp"
+
+#ifdef _WIN32
+#include <windows.h>
+#endif
 
 const int VIDEO_SEEK_NODELAY = 0;
 
@@ -448,6 +456,44 @@ void VideoView::requestBrightness(float value) {
     osdInfoBox->setVisibility(brls::Visibility::VISIBLE);
 }
 
+void VideoView::updateBattery(brls::Time now) {
+    if (!MPVCore::SHOW_BATTERY) {
+        batteryBox->setVisibility(brls::Visibility::GONE);
+        batteryNextUpdate = 0;
+        return;
+    }
+    if (now < batteryNextUpdate) return;
+    batteryNextUpdate = now + 5000000;
+
+    int percent = -1;
+    bool charging = false;
+#ifdef _WIN32
+    // Read one snapshot, including on ARM64. Never display Windows' unknown (255) value.
+    constexpr unsigned char noBattery = 128;
+    constexpr unsigned char chargingFlag = 8;
+    SYSTEM_POWER_STATUS status{};
+    if (GetSystemPowerStatus(&status) && status.BatteryFlag != 255 &&
+        !(status.BatteryFlag & noBattery) && status.BatteryLifePercent <= 100) {
+        percent = status.BatteryLifePercent;
+        charging = (status.BatteryFlag & chargingFlag) != 0;
+    }
+#else
+    auto* platform = brls::Application::getPlatform();
+    if (platform->canShowBatteryLevel()) {
+        percent = platform->getBatteryLevel();
+        charging = platform->isBatteryCharging();
+    }
+#endif
+    if (percent < 0 || percent > 100) {
+        batteryBox->setVisibility(brls::Visibility::GONE);
+        return;
+    }
+    batteryLabel->setText(fmt::format("{}%", percent));
+    batteryLevel->setWidth(23.0f * percent / 100.0f);
+    batteryLevel->setColor(charging ? nvgRGB(140, 251, 79) : nvgRGB(255, 255, 255));
+    batteryBox->setVisibility(brls::Visibility::VISIBLE);
+}
+
 void VideoView::draw(NVGcontext* vg, float x, float y, float w, float h, brls::Style style, brls::FrameContext* ctx) {
     auto& mpv = MPVCore::instance();
     if (!mpv.isValid()) return;
@@ -499,6 +545,10 @@ void VideoView::draw(NVGcontext* vg, float x, float y, float w, float h, brls::S
         this->hintBox->setVisibility(brls::Visibility::GONE);
         this->hintLastShowTime = 0;
     }
+
+    // Keep battery visible when the playback controls are hidden or locked.
+    this->updateBattery(current);
+    if (batteryBox->getVisibility() == brls::Visibility::VISIBLE) batteryBox->frame(ctx);
 
     // hot key
     this->buttonProcessing();

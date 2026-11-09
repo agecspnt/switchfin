@@ -201,6 +201,7 @@
     },
     "playback": {
       "header": "Wiedergabe",
+      "show_battery": "Akkustand anzeigen",
       "bottom_bar": "Zeige unteren Fortschrittsbalken",
       "low_quality": "Dekodierung in geringer Qualität (weniger CPU-Last)",
       "in_memory_cache": "Arbeitsspeicher-Cache",

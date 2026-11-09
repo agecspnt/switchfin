@@ -118,6 +118,7 @@ public:
 
     // Bottom progress bar
     inline static bool BOTTOM_BAR = true;
+    inline static bool SHOW_BATTERY = false;
     inline static bool OSD_ON_TOGGLE = true;
     // 是否开启 TV 客户端的控制逻辑
     inline static bool OSD_TV_MODE = false;

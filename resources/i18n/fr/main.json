@@ -202,6 +202,7 @@
     },
     "playback": {
       "header": "Paramètres de lecture",
+      "show_battery": "Afficher le niveau de batterie",
       "bottom_bar": "Afficher la barre de progression en bas",
       "low_quality": "Décodage basse qualité (utilise moins de CPU)",
       "in_memory_cache": "Cache en mémoire",

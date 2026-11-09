@@ -201,6 +201,7 @@
     },
     "playback": {
       "header": "Přehrávání",
+      "show_battery": "Zobrazit stav baterie",
       "bottom_bar": "Zobrazit spodní indikátor průběhu",
       "low_quality": "Nízká kvalita dekódování (s menším využitím CPU)",
       "in_memory_cache": "Ve vyrovnávací paměti",

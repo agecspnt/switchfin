@@ -36,6 +36,7 @@ private:
     BRLS_BIND(brls::SelectorCell, subtitleTrack, "setting/track/subtitle");
     BRLS_BIND(brls::SelectorCell, audioTrack, "setting/track/audio");
     BRLS_BIND(brls::BooleanCell, btnBottomBar, "setting/player/bottom_bar");
+    BRLS_BIND(brls::BooleanCell, btnShowBattery, "setting/player/show_battery");
     BRLS_BIND(brls::BooleanCell, btnOSDOnToggle, "setting/player/osd_on_toggle");
     BRLS_BIND(brls::BooleanCell, btnFullscreen, "setting/fullscreen");
     BRLS_BIND(brls::BooleanCell, btnAlwaysOnTop, "setting/always_on_top");
