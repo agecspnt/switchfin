@@ -109,6 +109,17 @@ VideoView::VideoView() {
         return true;
     });
     this->btnSetting->addGestureRecognizer(new brls::TapGestureRecognizer(this->btnSetting));
+#if (defined(__APPLE__) || defined(__linux__) || defined(_WIN32)) && !defined(ANDROID)
+    this->btnFullscreen->registerClickAction([](brls::View*) {
+        VideoContext::FULLSCREEN = !VideoContext::FULLSCREEN;
+        AppConfig::instance().setItem(AppConfig::FULLSCREEN, VideoContext::FULLSCREEN);
+        brls::Application::getPlatform()->getVideoContext()->fullScreen(VideoContext::FULLSCREEN);
+        return true;
+    });
+    this->btnFullscreen->addGestureRecognizer(new brls::TapGestureRecognizer(this->btnFullscreen));
+#else
+    this->btnFullscreen->setVisibility(brls::Visibility::GONE);
+#endif
     this->registerActions(
         "main/player/setting"_i18n, brls::BUTTON_X, KeyBind::getSetting(),
         [this](brls::View* view) {

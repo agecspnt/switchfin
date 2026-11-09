@@ -23,10 +23,10 @@
                 detachedY="18"
                 width="23"
                 height="10" />
-            <brls:Image
+            <SVGImage
                 width="44"
                 height="44"
-                image="@res/img/sys/battery_back_dark.png" />
+                svg="@res/icon/ico-battery.svg" />
         </brls:Box>
         <brls:Label
             id="video/battery/label"
@@ -107,6 +107,9 @@
             positionType="absolute"
             positionRight="10"
             positionTop="10">
+            <brls:Box id="video/osd/fullscreen" width="50" height="50" alignItems="center" justifyContent="center" focusable="true" hideClickAnimation="true">
+                <SVGImage width="30" height="30" svg="@res/icon/ico-fullscreen.svg" />
+            </brls:Box>
             <brls:Box
                 wireframe="false"
                 id="video/osd/backward"

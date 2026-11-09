@@ -81,6 +81,7 @@ private:
     BRLS_BIND(brls::Box, btnForward, "video/osd/forward");
     BRLS_BIND(brls::Box, btnBackward, "video/osd/backward");
     BRLS_BIND(brls::Box, btnSetting, "video/osd/setting");
+    BRLS_BIND(brls::Box, btnFullscreen, "video/osd/fullscreen");
     BRLS_BIND(brls::Box, btnCast, "video/osd/cast");
     BRLS_BIND(brls::Box, btnToggle, "video/osd/toggle");
     BRLS_BIND(brls::Box, btnVideoQuality, "video/quality/box");
