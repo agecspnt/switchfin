@@ -135,6 +135,10 @@ void MPVCore::init() {
     mpv_set_option_string(mpv, "config", "yes");
     mpv_set_option_string(mpv, "config-dir", confDir.c_str());
     mpv_set_option_string(mpv, "sub-fonts-dir", confDir.c_str());
+#ifdef _WIN32
+    // Use a single CJK-capable family for unstyled text subtitles on Windows.
+    mpv_set_option_string(mpv, "sub-font", "Microsoft YaHei");
+#endif
     mpv_set_option_string(mpv, "watch-later-dir", fmt::format("{}/watch-later", confDir).c_str());
     mpv_set_option_string(mpv, "gpu-shader-cache-dir", fmt::format("{}/cache", confDir).c_str());
     mpv_set_option_string(mpv, "ytdl", "no");

@@ -1,0 +1,65 @@
+name: Windows ARM64
+
+on:
+  push:
+    branches: [feat/player-battery]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: windows-arm64-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: windows-11-arm
+    timeout-minutes: 45
+    defaults:
+      run:
+        shell: msys2 {0}
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          submodules: recursive
+      - uses: msys2/setup-msys2@v2
+        with:
+          msystem: clangarm64
+          release: true
+          install: >-
+            mingw-w64-clang-aarch64-cmake
+            mingw-w64-clang-aarch64-ninja
+            mingw-w64-clang-aarch64-cc
+      - name: Install upstream ARM64 dependencies
+        run: |
+          set -euo pipefail
+          mkdir -p packages
+          cd packages
+          # Forks do not inherit the upstream dependency release assets.
+          for pkg in glfw-3.5.0-1 curl-8.23.0-1 mpv-0.42.0-2 libmupdf-1.28.6-2 libwebp-1.6.0-1; do
+            curl --fail --location --retry 3 --remote-name "https://github.com/dragonflylee/switchfin/releases/download/mingw-packages/${MINGW_PACKAGE_PREFIX}-${pkg}-any.pkg.tar.zst"
+          done
+          pacman -U --noconfirm *.pkg.tar.zst
+      - name: Build
+        run: |
+          cmake -B build -G Ninja \
+            -DCMAKE_BUILD_TYPE=Release \
+            -DPLATFORM_DESKTOP=ON \
+            -DWIN32_TERMINAL=OFF \
+            -DZLIB_USE_STATIC_LIBS=ON \
+            -DUSE_SYSTEM_GLFW=ON \
+            -DUSE_D3D11=ON \
+            -DUSE_LIBROMFS=ON \
+            -DUSE_MUPDF=ON \
+            -DVERSION_BUILD=${{ github.run_number }}
+          cmake --build build
+          cp README.md "${MINGW_PREFIX}/bin/libmpv-2.dll" "${MINGW_PREFIX}/bin/libmupdf.dll" build/
+      - uses: actions/upload-artifact@v7
+        with:
+          name: Switchfin-windows-arm64-battery
+          if-no-files-found: error
+          path: |
+            build/Switchfin.exe
+            build/*.dll
+            build/README.md

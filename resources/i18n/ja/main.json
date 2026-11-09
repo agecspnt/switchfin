@@ -201,6 +201,7 @@
     },
     "playback": {
       "header": "プレーバック",
+      "show_battery": "バッテリー残量を表示",
       "bottom_bar": "下部にプログレスバーを表示",
       "low_quality": "低品質なデコード (CPU使用率が低い)",
       "in_memory_cache": "インメモリーキャッシュ",

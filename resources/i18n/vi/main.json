@@ -201,6 +201,7 @@
     },
     "playback": {
       "header": "Phát lại",
+      "show_battery": "Hiển thị mức pin",
       "bottom_bar": "Hiển thị thanh tiến trình bên dưới",
       "low_quality": "Giải mã chất lượng thấp (sử dụng ít CPU hơn)",
       "in_memory_cache": "Trong bộ nhớ đệm",

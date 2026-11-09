@@ -70,11 +70,18 @@ public:
     static bool close(bool quit = false);
 
 private:
+    BRLS_BIND(brls::Box, batteryBox, "video/battery/box");
+    BRLS_BIND(brls::Rectangle, batteryLevel, "video/battery/level");
+    BRLS_BIND(brls::Label, batteryLabel, "video/battery/label");
+    void updateBattery(brls::Time now);
+    brls::Time batteryNextUpdate = 0;
+
     /// OSD
     BRLS_BIND(brls::Label, titleLabel, "video/osd/title");
     BRLS_BIND(brls::Box, btnForward, "video/osd/forward");
     BRLS_BIND(brls::Box, btnBackward, "video/osd/backward");
     BRLS_BIND(brls::Box, btnSetting, "video/osd/setting");
+    BRLS_BIND(brls::Box, btnFullscreen, "video/osd/fullscreen");
     BRLS_BIND(brls::Box, btnCast, "video/osd/cast");
     BRLS_BIND(brls::Box, btnToggle, "video/osd/toggle");
     BRLS_BIND(brls::Box, btnVideoQuality, "video/quality/box");

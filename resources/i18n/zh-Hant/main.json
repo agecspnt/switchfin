@@ -201,6 +201,7 @@
     },
     "playback": {
       "header": "播放設定",
+      "show_battery": "顯示電量",
       "bottom_bar": "顯示底部進度條",
       "low_quality": "低畫質解碼（以畫質為代價換取更低的功耗）",
       "in_memory_cache": "解码緩存",

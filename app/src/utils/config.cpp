@@ -42,6 +42,9 @@ constexpr uint32_t MINIMUM_WINDOW_HEIGHT = 360;
 #include <borealis/views/edit_text_dialog.hpp>
 #include "api/jellyfin.hpp"
 #include "utils/config.hpp"
+#ifdef _WIN32
+namespace brls { extern bool plainKeyboardHints; }
+#endif
 #include "utils/keybind.hpp"
 #include "utils/misc.hpp"
 #include "utils/ums.hpp"
@@ -71,6 +74,7 @@ std::unordered_map<AppConfig::Item, AppConfig::Option> AppConfig::settingMap = {
     {MPV_VO, {"mpv_vo", {"gpu", "gpu-next", "mediacodec_embed"}}},
     {MPV_RENDER, {"mpv_render"}},
     {PLAYER_BOTTOM_BAR, {"player_bottom_bar"}},
+    {PLAYER_SHOW_BATTERY, {"player_show_battery"}},
     {PLAYER_LOW_QUALITY, {"player_low_quality"}},
     {PLAYER_SUBS_FALLBACK, {"player_subs_fallback"}},
     {PLAYER_INMEMORY_CACHE,
@@ -324,6 +328,7 @@ bool AppConfig::init() {
 
     // 初始化是否固定显示底部进度条
     MPVCore::BOTTOM_BAR = this->getItem(PLAYER_BOTTOM_BAR, true);
+    MPVCore::SHOW_BATTERY = this->getItem(PLAYER_SHOW_BATTERY, false);
     MPVCore::OSD_ON_TOGGLE = this->getItem(OSD_ON_TOGGLE, true);
     MPVCore::TOUCH_GESTURE = this->getItem(TOUCH_GESTURE, true);
     MPVCore::CLIP_POINT = this->getItem(CLIP_POINT, true);
@@ -471,6 +476,9 @@ bool AppConfig::init() {
     Ums::instance().init();
 
     // init custom font path
+#ifdef _WIN32
+    brls::plainKeyboardHints = getItem(KEYMAP, std::string("xbox")) == "keyboard";
+#endif
     brls::FontLoader::USER_FONT_PATH = configDir() + "/font.ttf";
     brls::FontLoader::USER_ICON_PATH = configDir() + "/icon.ttf";
     if (access(brls::FontLoader::USER_ICON_PATH.c_str(), F_OK) == -1) {

@@ -52,5 +52,19 @@
             </Tab>
 
         </AutoTabFrame>
+        <brls:Box
+            id="main/fullscreen"
+            positionType="absolute"
+            positionTop="330"
+            positionLeft="25"
+            width="50"
+            height="50"
+            alignItems="center"
+            justifyContent="center"
+            focusable="true"
+            cornerRadius="8"
+            hideHighlightBackground="true">
+            <SVGImage width="30" height="30" svg="@res/icon/ico-fullscreen-nav.svg" />
+        </brls:Box>
     </brls:Box>
 </brls:AppletFrame>

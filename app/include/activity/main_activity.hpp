@@ -25,6 +25,7 @@ public:
     CONTENT_FROM_XML_RES("activity/main.xml");
 
     MainActivity();
+    void onContentAvailable() override;
 
 private:
     std::unique_ptr<websocket> ws;

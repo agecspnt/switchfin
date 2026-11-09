@@ -31,5 +31,7 @@ private:
     std::unique_ptr<lunasvg::Document> document = nullptr;
     brls::VoidEvent::Subscription subscription;
     std::string filePath;
+    std::string cacheKey;
+    std::string makeCacheKey(const std::string& path);
     float angle = 0;
 };

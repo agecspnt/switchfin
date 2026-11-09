@@ -122,6 +122,12 @@ PlayerSetting::PlayerSetting(const jellyfin::Source* src) {
             conf.setItem(AppConfig::PLAYER_BOTTOM_BAR, value);
         });
 
+    btnShowBattery->init(
+        "main/setting/playback/show_battery"_i18n, conf.getItem(AppConfig::PLAYER_SHOW_BATTERY, false), [](bool value) {
+            MPVCore::SHOW_BATTERY = value;
+            AppConfig::instance().setItem(AppConfig::PLAYER_SHOW_BATTERY, value);
+        });
+
     btnOSDOnToggle->init(
         "main/setting/playback/osd_on_toggle"_i18n, conf.getItem(AppConfig::OSD_ON_TOGGLE, true), [&conf](bool value) {
             MPVCore::OSD_ON_TOGGLE = value;

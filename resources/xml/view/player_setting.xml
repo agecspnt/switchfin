@@ -72,6 +72,8 @@
                     <brls:BooleanCell
                         id="setting/player/bottom_bar" />
                     <brls:BooleanCell
+                        id="setting/player/show_battery" />
+                    <brls:BooleanCell
                         id="setting/player/osd_on_toggle" />
                 </brls:Box>
 

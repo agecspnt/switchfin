@@ -4,6 +4,15 @@
 
 #include "view/svg_image.hpp"
 #include <borealis/core/cache_helper.hpp>
+#include <algorithm>
+#include <cmath>
+
+std::string SVGImage::makeCacheKey(const std::string& path) {
+    const float scale = brls::Application::windowScale * 2.0f;
+    const int width = std::max(1, (int)std::ceil(this->getWidth() * scale));
+    const int height = std::max(1, (int)std::ceil(this->getHeight() * scale));
+    return fmt::format("{}#{}x{}", path, width, height);
+}
 
 SVGImage::SVGImage() {
     this->registerFilePathXMLAttribute("svg", [this](const std::string& value) { this->setImageFromSVGFile(value); });
@@ -25,7 +34,8 @@ SVGImage::SVGImage() {
 void SVGImage::setImageFromSVGRes(const std::string& value) {
 #ifdef USE_LIBROMFS
     filePath = "@res/" + value;
-    if (checkCache(filePath) > 0) return;
+    cacheKey = makeCacheKey(filePath);
+    if (checkCache(cacheKey) > 0) return;
     auto image = romfs::get(value);
     this->document = lunasvg::Document::loadFromData((const char*)image.string().data(), image.size());
     if (this->document) {
@@ -38,7 +48,7 @@ void SVGImage::setImageFromSVGRes(const std::string& value) {
     size_t tex = this->getTexture();
     if (tex > 0) {
         brls::Logger::verbose("cache svg: {} {}", value, tex);
-        brls::TextureCache::instance().addCache("@res/" + value, tex);
+        brls::TextureCache::instance().addCache(cacheKey, tex);
     } else {
         brls::Logger::error("svg got zero tex: {} {}", value, tex);
     }
@@ -52,7 +62,8 @@ void SVGImage::setImageFromSVGFile(const std::string& value) {
 #ifdef USE_LIBROMFS
     if (value.rfind("@res/", 0) == 0) return this->setImageFromSVGRes(value.substr(5));
 #endif
-    if (checkCache(value) > 0) return;
+    cacheKey = makeCacheKey(value);
+    if (checkCache(cacheKey) > 0) return;
 
     this->document = lunasvg::Document::loadFromFile(value);
     if (this->document) {
@@ -65,7 +76,7 @@ void SVGImage::setImageFromSVGFile(const std::string& value) {
     size_t tex = this->getTexture();
     if (tex > 0) {
         brls::Logger::verbose("cache svg: {} {}", value, tex);
-        brls::TextureCache::instance().addCache(value, tex);
+        brls::TextureCache::instance().addCache(cacheKey, tex);
     } else {
         brls::Logger::error("svg got zero tex: {} {}", value, tex);
     }
@@ -83,8 +94,8 @@ void SVGImage::setImageFromSVGString(const std::string& value) {
 void SVGImage::updateBitmap() {
     if (!this->document) return;
 
-    float width = this->getWidth() * brls::Application::windowScale;
-    float height = this->getHeight() * brls::Application::windowScale;
+    float width = std::max(1.0f, std::ceil(this->getWidth() * brls::Application::windowScale * 2.0f));
+    float height = std::max(1.0f, std::ceil(this->getHeight() * brls::Application::windowScale * 2.0f));
     auto bitmap = this->document->renderToBitmap(width, height);
     bitmap.convertToRGBA();
     NVGcontext* vg = brls::Application::getNVGContext();
@@ -104,6 +115,7 @@ brls::View* SVGImage::create() { return new SVGImage(); }
 
 void SVGImage::draw(
     NVGcontext* vg, float x, float y, float width, float height, brls::Style style, brls::FrameContext* ctx) {
+    if (!filePath.empty() && cacheKey != makeCacheKey(filePath)) setImageFromSVGFile(filePath);
     if (this->texture == 0) return;
 
     nvgSave(vg);
