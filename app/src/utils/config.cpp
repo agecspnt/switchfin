@@ -42,6 +42,9 @@ constexpr uint32_t MINIMUM_WINDOW_HEIGHT = 360;
 #include <borealis/views/edit_text_dialog.hpp>
 #include "api/jellyfin.hpp"
 #include "utils/config.hpp"
+#ifdef _WIN32
+namespace brls { extern bool plainKeyboardHints; }
+#endif
 #include "utils/keybind.hpp"
 #include "utils/misc.hpp"
 #include "utils/ums.hpp"
@@ -473,6 +476,9 @@ bool AppConfig::init() {
     Ums::instance().init();
 
     // init custom font path
+#ifdef _WIN32
+    brls::plainKeyboardHints = getItem(KEYMAP, std::string("xbox")) == "keyboard";
+#endif
     brls::FontLoader::USER_FONT_PATH = configDir() + "/font.ttf";
     brls::FontLoader::USER_ICON_PATH = configDir() + "/icon.ttf";
     if (access(brls::FontLoader::USER_ICON_PATH.c_str(), F_OK) == -1) {

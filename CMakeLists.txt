@@ -99,6 +99,14 @@ endif ()
 # build borealis and other third party libraries
 add_subdirectory(library)
 
+# Keep the upstream gamepad hints, but render keyboard labels as ordinary text on Windows.
+if (WIN32)
+    get_target_property(BOREALIS_TARGET_SOURCES borealis SOURCES)
+    list(FILTER BOREALIS_TARGET_SOURCES EXCLUDE REGEX "/views/hint\\.cpp$")
+    set_property(TARGET borealis PROPERTY SOURCES ${BOREALIS_TARGET_SOURCES})
+    target_sources(borealis PRIVATE "${CMAKE_SOURCE_DIR}/app/overrides/hint.cpp")
+endif ()
+
 if (USE_SYSTEM_CURL)
     find_package(CURL REQUIRED)
 else ()
