@@ -8,9 +8,14 @@ on:
 permissions:
   contents: read
 
+concurrency:
+  group: windows-arm64-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   build:
     runs-on: windows-11-arm
+    timeout-minutes: 45
     defaults:
       run:
         shell: msys2 {0}
